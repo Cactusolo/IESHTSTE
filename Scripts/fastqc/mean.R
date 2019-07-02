@@ -1,0 +1,5 @@
+rm(list=ls())
+file <- list.files(".", pattern="_45_base.tmp$", full.names=T)
+Mean_value <- round(mean(read.csv(file, header=F, stringsAsFactors = F)$V1),2)
+#cat(Mean_value, sep="\n", file="tmp_mean.txt")
+print(Mean_value)
