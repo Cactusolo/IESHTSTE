@@ -1,0 +1,21 @@
+#!/bin/bash
+date;hostname;pwd
+
+display=$(shuf -i 100-200 -n 1)
+export DISPLAY=:${display}
+Xvfb :${display} -screen 0 1024x768x16 > /dev/null 2>&1 &
+echo "export DISPLAY=:${display}" > ~/.xvfb
+
+
+##keep the following line as the same except change astral_rmsn.tre to the name of your species tree you want the pies mapped on to and 596 should be changed to the number of gene trees you submitted. 
+##The word "out" should stay the same unless you changed that when you ran phycharts. You shouldn't have done that. 
+##Should be run from the same place as the out files from phycharts. 
+##Don't change anything in the phychartspiecharts.py script
+##the above stuff changes the size of your output pdf which is nice. You don't need to use this submit script unless you want to have a larger pdf. Which you probably do. 
+
+
+module load ete3 
+
+python phychartspiecharts.py astral_rmsn.tre out 596
+
+date
