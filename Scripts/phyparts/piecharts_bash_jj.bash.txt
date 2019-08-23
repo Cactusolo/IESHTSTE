@@ -1,0 +1,13 @@
+#!/bin/bash
+date;hostname;pwd
+
+display=$(shuf -i 100-200 -n 1)
+export DISPLAY=:${display}
+Xvfb :${display} -screen 0 1024x768x16 > /dev/null 2>&1 &
+echo "export DISPLAY=:${display}" > ~/.xvfb
+
+module load ete3
+
+python phypartspiecharts.py Trimal_50_gblocks_manual_comb_bs50_astral_rooted.tre Trimal_50_gblocks_manual_comb_bs50_phyparts 51 --svg_name branch_width.svg
+
+date
