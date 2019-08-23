@@ -3,9 +3,9 @@ title: "Intructions for extracting sequences from HTS target enrichment reads"
 author: "Miao Sun ( _cactusresponsible[AT]gmail.com_)"
 date: "July 16, 2019"
 output:
-  word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  word_document: default
 ---
   
   
@@ -24,7 +24,7 @@ _I also made some assumptions that:_
   
 ### Geeral workingflow  
 
-_need to addin a workingflow diagram  _
+![workingflow diagram](./figure/working_flowing.jpg)
 
 
 ## Data
@@ -99,7 +99,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
     `bash fastq_lane_cat.sh Evgeny_13.txt UFL_394803_SampleSheet.csv`  
     
     
-  This bash script will take two input files: one is sample ID file, and the other is sequence ID table.   
+  This bash script will take two input files: one is sample ID file, and the other is sequence ID table. The formact and content of each file is as shown below:   
   
   
   Example,   
@@ -214,7 +214,8 @@ If the third script `raxml_NG_model.sbatch` is launched, it will submit a new in
 
 **Acknowledgements**   
 
-[Rebecca L. Stubbs](http://www.rebeccalstubbs.com/)  
+[Rebecca L. Stubbs](http://www.rebeccalstubbs.com/) & 
+[Johanna R Jantzen](https://www.johannajantzen.com/about-me.html) 
 _sharing her modified scripts for runing [PhyPartsPieCharts](https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb)_  
 
 [Andre A Naranjo](https://scholar.google.com/citations?user=iabk-6MAAAAJ&hl=en)  
