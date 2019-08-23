@@ -22,7 +22,7 @@ _I also made some assumptions that:_
   + Using [Universal Probe Set for Targeted Sequencing of 353 Nuclear Genes](https://academic.oup.com/sysbio/article/68/4/594/5237557)  
   
   
-### Geeral workingflow  
+### General workingflow  
 
 ![workingflow diagram](./figure/working_flowing.jpg)
 
@@ -74,8 +74,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   
   
-  
-  _In this tutorial, I am only focus on [HybPiper](https://github.com/mossmatters/HybPiper) _
+  *In this tutorial, I am only focus on [HybPiper](https://github.com/mossmatters/HybPiper)*
   
   
 ### HybPiper   
