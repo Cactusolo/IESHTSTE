@@ -76,13 +76,15 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   [Code in github](https://github.com/AntonelliLab/seqcap_processor)  
   
+  <center>  
   
-  #######################################
+  \#######################################  
   
-\center __In this tutorial, I only focus on [HybPiper](https://github.com/mossmatters/HybPiper)__ \center  
+  __In this tutorial, I only focus on [HybPiper](https://github.com/mossmatters/HybPiper)__  
+  
+  \#######################################
 
-  #######################################
-
+</center>  
 
   
 ### HybPiper   
