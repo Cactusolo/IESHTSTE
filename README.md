@@ -144,7 +144,8 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
      **note:**
     + _check_result.sh_ and _mean.R_ have to work together, you have to put them under the same directory  
     + the R script is automatically invoked, you don't need to modify anything.  
-    + here is the example cmd (assuming you are in _FastQC_result_ folder)
+    + here is the example cmd (assuming you are in _FastQC_result_ folder)  
+    
       `cp /path/to/scripts/check_result.sh /path/to/scripts/mean.R .`  
     
       `bash check_result.sh`  
@@ -160,25 +161,72 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
     For large number of samples, submission to SLURM in HPC is required.
   * run: `sbatch Trimmomatic.sbatch`   
     _modify the recources requested to suit for your samples_  
-
+    
+  
+  * Note:  
+  
+    - You also need to run `_fastqc.sh_` again, in order to make sure all __the adaptors__ and __low quality reads__ are removed.  
+    - keep in mind you need to modify the ending of sequence files, if they are fastaq, not .gz; the **Fastqc** is pretty flexable with sequence file format
+    
   
   **Sequence Assembly using Hybpiper:**  
   
-  5. run hybpiper  
-  nohup bash HybPiper_summary.sh Lucas27 &
-  6. if want introns run intron script on accession folders out putted from previous step  
+  5. Run hybpiper  
+  
+  + run this under dev node by  
+    
+     `ml ufrc`  
+     
+     `srundev -t xxx`  
+     
+  +  need to put this script under "trimmed_data" folder
+  + should have "paired" and "unpaired" folders generated from Trimmomatic
+  + the reference sequenc already share here:/ufrc/soltis/share/Miao/Angiosperms353_targetSequences.fasta
+
+    `bash HybPiper_array_pairedonly.sh`   
+  
+  + or  If you have a lot samples; you need schedule a job in the SLURM  
+    
+      `sbatch HybPiper_array_pairedonly.sbatch`  
+  
+  6. If you want introns run intron script on accession folders out putted from previous step  
+  Skip here, please see the [HybPiper manual](https://github.com/mossmatters/HybPiper/wiki/Introns)
   
   7. to retrieve the supercontig sequences from the above run  put them all in one place (so `mv P*W* seq_dir`):  
    `module load python`  
    `python HybPiper/retrieve_sequences.py baits1.fasta seq_dir dna`  
     _just exons use DNA, if you run intronerate use supercontig_  
     
+  + After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
+  
+    \# need to put this script in the "sequence_dir" folder  
+    
+    \# and a list with all ids as "$file"  
+    
+    `bash clean_up.sh namelist.txt`
+    
+    \# the names list is the same as the folder names under "sequence_dir"
 
+    `head namelist.txt`  
+    
+      P002_WG08_68  
+      
+      P002_WG09_41  
+      
+      P002_WG10_37
+
+    
+    
   **Alignment**  
   
   8. run mafft script on individual gene
+  
+    
   9. Phyx --- rename sequence names  
+  
   10. TrimAL --- remove gaps in the alignment 
+  
+  
     
   **Outgroup**  
   _skip this step if you already have outgroup data from Target Enrichment or don't neeed 1kp data_  
