@@ -382,7 +382,7 @@ $(document).ready(function () {
 </div>
 
 
-<p><em><strong>This page is used to document steps of processing target enrichment reads from raw reads all the way down to phylogenetic tree reconstruction.</strong></em></p>
+<p><em><strong>This page is used to document steps of processing target enrichment reads from raw reads all the way down to phylogenetic tree reconstruction. Please also read the comments inside each script before excution, since they are all heavily commented.</strong></em></p>
 <p><em>Most scripts used here are wrotten in bash/shell and R</em></p>
 <p><em>I also made some assumptions that:</em></p>
 <ul>
@@ -420,18 +420,20 @@ $(document).ready(function () {
 <ol style="list-style-type: decimal">
 <li>HybPiper</li>
 </ol>
-<p><a href="https://bsapubs.onlinelibrary.wiley.com/doi/full/10.3732/apps.1600016">Publication</a></p>
-<p><a href="https://github.com/mossmatters/HybPiper">Code in github</a></p>
+<pre><code>[Publication](https://bsapubs.onlinelibrary.wiley.com/doi/full/10.3732/apps.1600016)  
+[Code in github](https://github.com/mossmatters/HybPiper)  </code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>aTRAM</li>
 </ol>
-<p><a href="https://journals.sagepub.com/doi/10.1177/1176934318774546">Publication</a></p>
-<p><a href="https://github.com/moskalenko/aTRAM">Code in github</a></p>
+<pre><code>[Publication](https://journals.sagepub.com/doi/10.1177/1176934318774546)  
+  
+[Code in github](https://github.com/moskalenko/aTRAM)  </code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>SECAPR</li>
 </ol>
-<p><a href="https://peerj.com/articles/5175/">Publication</a></p>
-<p><a href="https://github.com/AntonelliLab/seqcap_processor">Code in github</a></p>
+<pre><code>[Publication](https://peerj.com/articles/5175/)  
+
+[Code in github](https://github.com/AntonelliLab/seqcap_processor)  </code></pre>
 <center>
 <p>#######################################</p>
 <p><strong>In this tutorial, I only focus on <a href="https://github.com/mossmatters/HybPiper">HybPiper</a></strong></p>
@@ -510,38 +512,92 @@ For large number of samples, submission to SLURM in HPC is required.</li>
 <p><code>srundev -t xxx</code></p></li>
 <li>need to put this script under “trimmed_data” folder</li>
 <li>should have “paired” and “unpaired” folders generated from Trimmomatic</li>
-<li><p>the reference sequenc already share here:/ufrc/soltis/share/Miao/Angiosperms353_targetSequences.fasta</p></li>
-</ul>
-<p><code>bash HybPiper_array_pairedonly.sh</code></p>
-<p>or</p>
-<ul>
-<li>If you have a lot samples; you need schedule a job in the SLURM <code>sbatch HybPiper_array_pairedonly.sbatch</code></li>
+<li><p>the reference sequenc already share here:/ufrc/soltis/share/Miao/Angiosperms353_targetSequences.fasta</p>
+<p><code>bash HybPiper_array_pairedonly.sh</code></p></li>
+<li><p>or If you have a lot samples; you need schedule a job in the SLURM</p>
+<p><code>sbatch HybPiper_array_pairedonly.sbatch</code></p></li>
 </ul>
 <ol start="6" style="list-style-type: decimal">
 <li><p>If you want introns run intron script on accession folders out putted from previous step<br />
 Skip here, please see the <a href="https://github.com/mossmatters/HybPiper/wiki/Introns">HybPiper manual</a></p></li>
-<li><p>to retrieve the supercontig sequences from the above run put them all in one place (so <code>mv P*W* seq_dir</code>):<br />
-<code>module load python</code><br />
-<code>python HybPiper/retrieve_sequences.py baits1.fasta seq_dir dna</code><br />
-<em>just exons use DNA, if you run intronerate use supercontig</em></p></li>
+<li><p>When the first HybPiper script finished, the results generated are enough for us to do some statistics to evaluate them. At this step, we do three things:</p></li>
+</ol>
+<pre><code>- Generate sequence length table using script from HybPiper --- `get_seq_lengths.py`  
+
+- Assembling stats for each gene and each sample using script from HybPiper --- `hybpiper_stats.py`  
+
+- using R script `gene_recovery_heatmap.R` to generate a heatmap showing to genes are recovered for each samples</code></pre>
+<ul>
+<li><p>All these three functionalities are summarized in a bash script called <code>HybPiper_summary.sh</code>; you run:</p>
+<code>bash HybPiper_summary.sh XXX</code><br />
+</li>
+<li>Note:</li>
+<li>here “XXX” is prefixed string for all the results generated</li>
+<li><p>prepare a plain txt file — “XXXnamelist.txt” (has to name this way or you modify the script as you wish) to store sequence ID.</p></li>
+</ul>
+<p>Example:</p>
+<pre><code>`[cactus]$ head -3 XXXnamelist.txt`  
+    P002_WA01_59  
+    P002_WA02_27  
+    P002_WA03_82  </code></pre>
+<ul>
+<li>The R scrit should be in “./Script/” directory; or modify the path<br />
+</li>
+<li>You should have these files in your current dir:
+<ul>
+<li>XXXseq_length.txt<br />
+</li>
+<li>XXX_assemble_stats.txt<br />
+</li>
+<li>XXX_heatmap.pdf</li>
+</ul></li>
+</ul>
+<ol start="8" style="list-style-type: decimal">
+<li>Before we retrieve the supercontig sequences (assembled seq for each gene) from the first run above, we need to put Seq_ID folders all in one place (so <code>mv P*W* seq_dir</code>):</li>
 </ol>
 <ul>
-<li><p>After you done with HybPiper, you’d better run <code>clean_up.sh</code> under “sequence_dir” remove tons of intermedia results, saving space in HPC</p>
-<p># need to put this script in the “sequence_dir” folder</p>
-<p># and a list with all ids as “$file”</p>
-<p><code>bash clean_up.sh namelist.txt</code></p>
-<p># the names list is the same as the folder names under “sequence_dir”</p>
-<p><code>head namelist.txt</code></p>
-<p>P002_WG08_68</p>
-<p>P002_WG09_41</p>
-<p>P002_WG10_37</p></li>
+<li>If you want to run each individually:</li>
 </ul>
-<p><strong>Alignment</strong></p>
-<ol start="8" style="list-style-type: decimal">
-<li><p>run mafft script on individual gene</p></li>
-<li><p>Phyx — rename sequence names</p></li>
-<li><p>TrimAL — remove gaps in the alignment</p></li>
+<p><code>module load python</code></p>
+<p><code>python HybPiper/retrieve_sequences.py baits1.fasta seq_dir dna</code><br />
+<em>just exons use DNA, if you run intronerate use supercontig</em></p>
+<ul>
+<li><p>If you want one-stop-shop, you need to run a comprehensive bash script:</p>
+<p><code>bash Extract_seq_align_supmtx_rename.sh XXX</code></p></li>
+<li>Note:
+<ul>
+<li><p>This bash script will do:<br />
+1) retrieve sequences;<br />
+2) involk MAFFT to do the alignment;<br />
+3) combined all genes into one supermatrix, and rename sequences using <a href="https://github.com/FePhyFoFum/phyx">phyx</a> remove 50% gaps (can be modified);<br />
+4) generating gene sample present absent binary matrix</p></li>
+<li><p>You also need to prepare a csv file with you “samples_ID,Seq_ID” or “species_ID,Seq_ID”, which depends how you want you sequences and matrix represented in later summary and naming.</p>
+<pre><code>Example:  
+`[cactus]$ head -3 XXX.csv`  
+
+  ZYP_10,P002_WA04_7  
+  ZYP_12,P002_WA05_38  
+  ZYP_151_152,P002_WD03_30  </code></pre></li>
+<li><p>You can also run mafft script on individual gene (modify as needed)<br />
+<code>bash Mafft_alignment.sh</code></p></li>
+<li><p>You can also trim gaps in the alignment based on different criterias<br />
+<code>ml trimal/1.2</code><br />
+<code>trimal -in &lt;inputfile&gt; -out &lt;outputfile&gt; -gappyout</code></p></li>
+</ul></li>
+</ul>
+<ol start="9" style="list-style-type: decimal">
+<li>After you done with HybPiper, you’d better run <code>clean_up.sh</code> under “sequence_dir” remove tons of intermedia results, saving space in HPC</li>
 </ol>
+<ul>
+<li><p>need to put this script in the “sequence_dir” folder<br />
+<code>bash clean_up.sh XXXnamelist.txt</code></p></li>
+<li><p>and a list with all ids as “$file”, one per line inside XXXnamelist.txt</p></li>
+<li><p>the names list is the same as the folder names under “sequence_dir”</p>
+<p><code>head XXXnamelist.txt</code><br />
+P002_WG08_68<br />
+P002_WG09_41<br />
+P002_WG10_37</p></li>
+</ul>
 <p><strong>Outgroup</strong><br />
 <em>skip this step if you already have outgroup data from Target Enrichment or don’t neeed 1kp data</em></p>
 <p>Beside the data generated from Target Enrichment of 353 universial probe sets, I also included some species with <a href="http://www.onekp.com/public_data.html">1kP transcriptome data</a> as Outgroups.</p>
@@ -569,7 +625,8 @@ Skip here, please see the <a href="https://github.com/mossmatters/HybPiper/wiki/
 <p><em>If the script detected that one alignment required larger mem (default is <strong>1g</strong> ) or more threads (default is <strong>1</strong> ), then it will lauch the third Script <code>raxml_NG_model.sbatch</code>, otherwise it will complete the job using current script with configurarion of default computation recource requirest</em></p>
 <p>If the third script <code>raxml_NG_model.sbatch</code> is launched, it will submit a new independent slurm job, with updated computation recources request based on the “–parse” results from <code>raxml_NG_check.sbatch</code> script.</p>
 <p><strong>Acknowledgements</strong></p>
-<p><a href="http://www.rebeccalstubbs.com/">Rebecca L. Stubbs</a> &amp; <a href="https://www.johannajantzen.com/about-me.html">Johanna R Jantzen</a> <em>sharing her modified scripts for runing <a href="https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb">PhyPartsPieCharts</a></em></p>
+<p><a href="http://www.rebeccalstubbs.com/">Rebecca L. Stubbs</a> &amp; <a href="https://www.johannajantzen.com/about-me.html">Johanna R Jantzen</a></p>
+<p><em>sharing her modified scripts for runing <a href="https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb">PhyPartsPieCharts</a></em></p>
 <p><a href="https://scholar.google.com/citations?user=iabk-6MAAAAJ&amp;hl=en">Andre A Naranjo</a><br />
 <em>sharing slurm job scripts for running Hybpiper</em></p>
 <p><a href="https://magitz.biology.ufl.edu/home/">Matt Gitzendanner</a><br />

@@ -9,7 +9,7 @@ output:
 ---
   
   
-_**This page is used to document steps of processing target enrichment reads from raw reads all the way down to phylogenetic tree reconstruction.**_  
+_**This page is used to document steps of processing target enrichment reads from raw reads all the way down to phylogenetic tree reconstruction. Please also read the comments inside each script before excution, since they are all heavily commented.**_  
 
 _Most scripts used here are wrotten in bash/shell and R_  
 
@@ -191,45 +191,86 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   6. If you want introns run intron script on accession folders out putted from previous step  
   Skip here, please see the [HybPiper manual](https://github.com/mossmatters/HybPiper/wiki/Introns)
   
-  7. to retrieve the supercontig sequences from the above run  put them all in one place (so `mv P*W* seq_dir`):  
+  7. When the first HybPiper script finished, the results generated are enough for us to do some statistics to evaluate them. At this step, we do three things:  
+  
+    - Generate sequence length table using script from HybPiper --- `get_seq_lengths.py`  
+    
+    - Assembling stats for each gene and each sample using script from HybPiper --- `hybpiper_stats.py`  
+  
+    - using R script `gene_recovery_heatmap.R` to generate a heatmap showing to genes are recovered for each samples
+  
+  + All these three functionalities are summarized in a bash script called `HybPiper_summary.sh`; you run:  
+  
+    `bash HybPiper_summary.sh XXX`  
+  + Note:
+  - here "XXX" is prefixed string for all the results generated
+  - prepare a plain txt file --- "XXXnamelist.txt" (has to name this way or you modify the script as you wish) to store sequence ID. 
+  
+  Example:  
+    
+    `[cactus]$ head -3 XXXnamelist.txt`  
+        P002_WA01_59  
+        P002_WA02_27  
+        P002_WA03_82  
+
+  - The R scrit should be in "./Script/" directory; or modify the path  
+  - You should have these files in your current dir:   
+      + XXXseq_length.txt  
+      + XXX_assemble_stats.txt  
+      + XXX_heatmap.pdf  
+    
+  8. Before we retrieve the supercontig sequences (assembled seq for each gene) from the first run above, we need to put Seq_ID folders all in one place (so `mv P*W* seq_dir`):  
+  
+  + If you want to run each individually:  
   
    `module load python`  
    
    `python HybPiper/retrieve_sequences.py baits1.fasta seq_dir dna`  
     _just exons use DNA, if you run intronerate use supercontig_  
-    
-    
-  + After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
   
-    - need to put this script in the "sequence_dir" folder  
-    
-    - and a list with all ids as "$file"  
-    
-    `bash clean_up.sh namelist.txt`
-    
-    \# the names list is the same as the folder names under "sequence_dir"
+  + If you want one-stop-shop, you need to run a comprehensive bash script:  
+  
+    `bash Extract_seq_align_supmtx_rename.sh XXX`  
+      
+  - Note:  
+    + This bash script will do:  
+          1) retrieve sequences;   
+          2) involk MAFFT to do the alignment;  
+          3) combined all genes into one supermatrix, and rename sequences using [phyx](https://github.com/FePhyFoFum/phyx) remove 50% gaps (can be modified);   
+          4) generating gene sample present absent binary matrix  
+          
+    + You also need to prepare a csv file with you "samples_ID,Seq_ID" or "species_ID,Seq_ID", which depends how you want you sequences and matrix represented in later summary and naming.  
+        
+          Example:  
+          `[cactus]$ head -3 XXX.csv`  
+          
+            ZYP_10,P002_WA04_7  
+            ZYP_12,P002_WA05_38  
+            ZYP_151_152,P002_WD03_30  
 
-    `head namelist.txt`  
+    + You can also run mafft script on individual gene (modify as needed)  
+          `bash Mafft_alignment.sh`
+        
+    + You can also trim gaps in the alignment based on different criterias  
+          `ml trimal/1.2`  
+          `trimal -in <inputfile> -out <outputfile> -gappyout`
+        
+        
+  9. After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
+  
+  - need to put this script in the "sequence_dir" folder  
+        `bash clean_up.sh XXXnamelist.txt`
     
+  - and a list with all ids as "$file", one per line inside XXXnamelist.txt
+    
+  - the names list is the same as the folder names under "sequence_dir"
+
+    `head XXXnamelist.txt`  
       P002_WG08_68  
-      
       P002_WG09_41  
-      
       P002_WG10_37
 
-    
-    
-  **Alignment**  
-  
-  8. run mafft script on individual gene
-  
-    
-  9. Phyx --- rename sequence names  
-  
-  10. TrimAL --- remove gaps in the alignment 
-  
-  
-    
+
   **Outgroup**  
   _skip this step if you already have outgroup data from Target Enrichment or don't neeed 1kp data_  
   
