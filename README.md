@@ -58,23 +58,22 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   1. HybPiper 
   
-  [Publication](https://bsapubs.onlinelibrary.wiley.com/doi/full/10.3732/apps.1600016)  
-  
-  [Code in github](https://github.com/mossmatters/HybPiper)  
+    [Publication](https://bsapubs.onlinelibrary.wiley.com/doi/full/10.3732/apps.1600016)  
+    [Code in github](https://github.com/mossmatters/HybPiper)  
   
   
   2. aTRAM  
   
-  [Publication](https://journals.sagepub.com/doi/10.1177/1176934318774546)  
-  
-  [Code in github](https://github.com/moskalenko/aTRAM)  
+    [Publication](https://journals.sagepub.com/doi/10.1177/1176934318774546)  
+      
+    [Code in github](https://github.com/moskalenko/aTRAM)  
   
   
   3. SECAPR  
   
-  [Publication](https://peerj.com/articles/5175/)  
+    [Publication](https://peerj.com/articles/5175/)  
   
-  [Code in github](https://github.com/AntonelliLab/seqcap_processor)  
+    [Code in github](https://github.com/AntonelliLab/seqcap_processor)  
   
   <center>  
   
@@ -193,15 +192,18 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   Skip here, please see the [HybPiper manual](https://github.com/mossmatters/HybPiper/wiki/Introns)
   
   7. to retrieve the supercontig sequences from the above run  put them all in one place (so `mv P*W* seq_dir`):  
+  
    `module load python`  
+   
    `python HybPiper/retrieve_sequences.py baits1.fasta seq_dir dna`  
     _just exons use DNA, if you run intronerate use supercontig_  
     
+    
   + After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
   
-    \# need to put this script in the "sequence_dir" folder  
+    - need to put this script in the "sequence_dir" folder  
     
-    \# and a list with all ids as "$file"  
+    - and a list with all ids as "$file"  
     
     `bash clean_up.sh namelist.txt`
     
@@ -272,7 +274,8 @@ If the third script `raxml_NG_model.sbatch` is launched, it will submit a new in
 **Acknowledgements**   
 
 [Rebecca L. Stubbs](http://www.rebeccalstubbs.com/) & 
-[Johanna R Jantzen](https://www.johannajantzen.com/about-me.html) 
+[Johanna R Jantzen](https://www.johannajantzen.com/about-me.html)  
+
 _sharing her modified scripts for runing [PhyPartsPieCharts](https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb)_  
 
 [Andre A Naranjo](https://scholar.google.com/citations?user=iabk-6MAAAAJ&hl=en)  
