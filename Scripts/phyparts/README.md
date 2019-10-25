@@ -1,6 +1,6 @@
 # README #
 
-__Note__ This folder is git clone from [Stephen Smith's phyparts repo](https://bitbucket.org/blackrim/phyparts/src/master/). Just keep one copy here for the integrity of my workingflow.
+__Note:__ This folder is `git cloned` from [Stephen Smith's phyparts repo](https://bitbucket.org/blackrim/phyparts/src/master/). Just keep one copy here for the integrity of my workingflow.
 
 PhyParts is meant to examine clades from a set of trees that may include
 duplications and incomplete taxon sampling. This is often the case with
