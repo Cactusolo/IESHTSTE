@@ -285,7 +285,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   
   **RAxML-NG**  
-  10. run raxml  
+  10. Run raxml  
   
   Three scripts used (./Scripts/raxml-ng/):  
   
@@ -310,6 +310,16 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
 
 If the third script `raxml_NG_model.sbatch` is launched, it will submit a new independent slurm job, with updated computation recources request based on the "--parse" results from `raxml_NG_check.sbatch` script.  
 
+**Visualization of Gene Tree Conflict With Pie Charts**  
+
+11. Please step to [my website](https://www.sunmiao.name/post/phypartspiecharts/) for instructions of making a Phyparts Piecharts
+
+
+<center>
+
+![Phyparts_Piecharts](featured.jpg)  
+
+</center>  
 
 
 **Acknowledgements**   
@@ -317,7 +327,7 @@ If the third script `raxml_NG_model.sbatch` is launched, it will submit a new in
 [Rebecca L. Stubbs](http://www.rebeccalstubbs.com/) & 
 [Johanna R Jantzen](https://www.johannajantzen.com/about-me.html)  
 
-_sharing her modified scripts for runing [PhyPartsPieCharts](https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb)_  
+_sharing their modified scripts for runing [PhyPartsPieCharts](https://github.com/mossmatters/MJPythonNotebooks/blob/master/BakingPieCharts.ipynb)_  
 
 [Andre A Naranjo](https://scholar.google.com/citations?user=iabk-6MAAAAJ&hl=en)  
 _sharing slurm job scripts for running Hybpiper_  
