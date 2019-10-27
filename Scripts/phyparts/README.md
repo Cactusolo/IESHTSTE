@@ -1,5 +1,7 @@
 # README #
 
+__Note:__ This folder is `git cloned` from [Stephen Smith's phyparts repo](https://bitbucket.org/blackrim/phyparts/src/master/). Just keep one copy here for the integrity of my workingflow.
+
 PhyParts is meant to examine clades from a set of trees that may include
 duplications and incomplete taxon sampling. This is often the case with
 transcriptomes and genomes. These are relatively simple mapping analyses, intended to allow for exploration of large datasets. Feel free to request functions or report bugs in the bug reporting page. **NOTE**: For partial sampling ICA and related 
