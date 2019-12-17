@@ -253,7 +253,10 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
         
     + You can also trim gaps in the alignment based on different criterias  
           `ml trimal/1.2`  
-          `trimal -in <inputfile> -out <outputfile> -gappyout`
+          `trimal -in <inputfile> -out <outputfile> -gappyout`  
+          
+        _**Note:** Please be careful when using `trimal` auto-model, because it can trim out a lot informatative sites (e.g., only 3 columns left in the alignment), and these tiny left-over alignment will cause `raxml-ng` have "ERROR in SPR round (LIBPLL-2240): BL opt converged to a worse likelihood score ..." error message. _  
+        Quick fix: use the original aligniment from `MAFFT` mentioned above.
         
         
   9. After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
@@ -287,13 +290,17 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   **RAxML-NG**  
   10. Run raxml  
   
-  Three scripts used (./Scripts/raxml-ng/):  
+  (1). Three scripts used (./Scripts/raxml-ng/):  
   
   + `raxmlng_laucher.sh`  
     
   + `raxml_NG_check.sbatch`  
     
   + `raxml_NG_model.sbatch`  
+  
+  + `Genus_aln_house_cleanV2.sh`  
+  
+  + `Genus_aln_house_clean_genus_sum.sh`
   
   These three scripts will run sequentially. By providing a list with all the genera, `raxmlng_laucher.sh` will go through each genus folder, creacte a "raxml" folder (where the raxml tree recontruction will happen), and looking for how many gene alignments were assembled for each genus; these numbers will be insert as a array job parameter for the first raxml script `raxml_NG_check.sbatch`.    
   
@@ -310,9 +317,23 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
 
 If the third script `raxml_NG_model.sbatch` is launched, it will submit a new independent slurm job, with updated computation recources request based on the "--parse" results from `raxml_NG_check.sbatch` script.  
 
+  (2). Post-run scripts used (./Scripts/raxml-ng/):  
+    
+  + `RAxmL_fail_checker.sh`
+  + `RAxML_genus_fail_checker.sh`  
+  + `run_timeout.sh`  
+  + `check_alig_triml_issue_launcher.sh`  
+  + `check_unfinished.sh`
+  + `clean_fail_raxml.sh`  
+  
+  _**Note:** You only need these scripts when your raxml-ng jobs failed._  
+  
+
 **Visualization of Gene Tree Conflict With Pie Charts**  
 
-11. Please step to [my website](https://www.sunmiao.name/post/phypartspiecharts/) for instructions of making a Phyparts Piecharts
+11. Please step to [my website](https://www.sunmiao.name/post/phypartspiecharts/) for instructions of making a Phyparts Piecharts  
+
+_If you run this on your own, you need have Python3, ETE3, and (X server)[https://kovyrin.net/2007/10/01/how-to-run-gui-programs-on-a-server-without-any-monitor/] installed._
 
 
 <center>
@@ -334,4 +355,5 @@ _sharing slurm job scripts for running Hybpiper_
 
 
 [Matt Gitzendanner](https://magitz.biology.ufl.edu/home/)  
-_helping with the slurm job schedule and raxml-ng MPI issues and other miscellaneous trouble shooting_
+_helping with the slurm job schedule and raxml-ng MPI issues and other miscellaneous trouble shooting_  
+
