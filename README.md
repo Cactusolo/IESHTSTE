@@ -91,7 +91,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
 
   **Preprocess:**  
   
-  1. Concatenate all lanes (L001 and L002; only if you have them on separate plates!)   
+#### 1. Concatenate all lanes (L001 and L002; only if you have them on separate plates!)   
     Example,  
     
     `cat RAPiD-Genomics_F076_UFL_###_P003_WD02_i5-503_i7-72_S22_L001_R1_001.fastq.gz RAPiD-Genomics_F076_UFL_###_P003_WD02_i5-503_i7-72_S60_L002_R1_001.fastq.gz > P003_WD02_72_R1.fastq.gz`  
@@ -123,7 +123,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
       
   UFL_394803_P002_WG12,D_4571,TAAGATTA,CGCATACA,RAPiD-Genomics_F076_UFL_394803_P002_WG12_i5-506_i7-42_S175_L001_R1_001.fastq.gz,2x150  
     
-  3. **fastqc** to quick check the quality; and later on can be used for comparison after trim and clean.  
+#### 2. **fastqc** to quick check the quality; and later on can be used for comparison after trim and clean.  
   * scripts needed:  
     fastqc.sh check_result.sh mean.R
   
@@ -149,7 +149,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
     
       `bash check_result.sh`  
 
-  4. Trim and clean reads using Trimmomatic, and preapre for next step --- Hybpiper.  
+#### 3. Trim and clean reads using Trimmomatic, and preapre for next step --- Hybpiper.  
  
   * scripts needed:  
   
@@ -170,7 +170,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   **Sequence Assembly using Hybpiper:**  
   
-  5. Run hybpiper  
+#### 4. Run hybpiper  
   
   + run this under dev node by  
     
@@ -188,10 +188,10 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
     
       `sbatch HybPiper_array_pairedonly.sbatch`  
   
-  6. If you want introns run intron script on accession folders out putted from previous step  
+#### 5. If you want introns run intron script on accession folders out putted from previous step  
   Skip here, please see the [HybPiper manual](https://github.com/mossmatters/HybPiper/wiki/Introns)
   
-  7. When the first HybPiper script finished, the results generated are enough for us to do some statistics to evaluate them. At this step, we do three things:  
+#### 6. When the first HybPiper script finished, the results generated are enough for us to do some statistics to evaluate them. At this step, we do three things:  
   
     - Generate sequence length table using script from HybPiper --- `get_seq_lengths.py`  
     
@@ -219,7 +219,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
       + XXX_assemble_stats.txt  
       + XXX_heatmap.pdf  
     
-  8. Before we retrieve the supercontig sequences (assembled seq for each gene) from the first run above, we need to put Seq_ID folders all in one place (so `mv P*W* seq_dir`):  
+#### 7. Before we retrieve the supercontig sequences (assembled seq for each gene) from the first run above, we need to put Seq_ID folders all in one place (so `mv P*W* seq_dir`):  
   
   + If you want to run each individually:  
   
@@ -235,7 +235,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   - Note:  
     + This bash script will do:  
           1) retrieve sequences;   
-          2) involk MAFFT to do the alignment;  
+          2) invoke MAFFT to do the alignment;  
           3) combined all genes into one supermatrix, and rename sequences using [phyx](https://github.com/FePhyFoFum/phyx) remove 50% gaps (can be modified);   
           4) generating gene sample present absent binary matrix  
           
@@ -255,11 +255,11 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
           `ml trimal/1.2`  
           `trimal -in <inputfile> -out <outputfile> -gappyout`  
           
-        _**Note:** Please be careful when using `trimal` auto-model, because it can trim out a lot informatative sites (e.g., only 3 columns left in the alignment), and these tiny left-over alignment will cause `raxml-ng` have "ERROR in SPR round (LIBPLL-2240): BL opt converged to a worse likelihood score ..." error message. _  
-        Quick fix: use the original aligniment from `MAFFT` mentioned above.
+          _**Note:** Please be careful when using `trimal` auto-model, because it can trim out a lot informatative sites (e.g., only 3 columns left in the alignment), and these tiny left-over alignment will cause `raxml-ng` have "ERROR in SPR round (LIBPLL-2240): BL opt converged to a worse likelihood score ..." error message._  
+         _Quick fix: use the original aligniment from `MAFFT` mentioned above._
         
         
-  9. After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
+#### 8. After you done with HybPiper, you'd better run `clean_up.sh` under "sequence_dir" remove tons of intermedia results, saving space in HPC  
   
   - need to put this script in the "sequence_dir" folder  
         `bash clean_up.sh XXXnamelist.txt`
@@ -274,7 +274,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
       P002_WG10_37
 
 
-  **Outgroup**  
+#### Outgroup  
   _skip this step if you already have outgroup data from Target Enrichment or don't neeed 1kp data_  
   
   Beside the data generated from Target Enrichment of 353 universial probe sets, I also included some species with [1kP transcriptome data](http://www.onekp.com/public_data.html) as Outgroups.  
@@ -287,8 +287,9 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   
   
   
-  **RAxML-NG**  
-  10. Run raxml  
+#### RAxML-NG
+
+#### 9. Run raxml  
   
   (1). Three scripts used (./Scripts/raxml-ng/):  
   
@@ -309,7 +310,7 @@ Currently, Three ways you can analyze high-throughput sequencing reads using tar
   -  MSA sanity check (see  [Tutorial](https://github.com/amkozlov/raxml-ng/wiki/Tutorial))   
     
   - Compress alignment patterns as RAxML Binary Alignment (.rba file)  
-      _It will laoding faster for raxml, comapared to FASTA or PHYLIP (see [Tutorial](https://github.com/amkozlov/raxml-ng/wiki/Tutorial) )_  
+      _It will loading faster for raxml, comapared to FASTA or PHYLIP (see [Tutorial](https://github.com/amkozlov/raxml-ng/wiki/Tutorial) )_  
       
   - Getting estimated computation recources (e.g., Model, memory, and optimal number of CPUs/threads)  
     
@@ -329,11 +330,13 @@ If the third script `raxml_NG_model.sbatch` is launched, it will submit a new in
   _**Note:** You only need these scripts when your raxml-ng jobs failed._  
   
 
-**Visualization of Gene Tree Conflict With Pie Charts**  
+#### Visualization of Gene Tree Conflict With Pie Charts  
 
-11. Please step to [my website](https://www.sunmiao.name/post/phypartspiecharts/) for instructions of making a Phyparts Piecharts  
 
-_If you run this on your own, you need have Python3, ETE3, and (X server)[https://kovyrin.net/2007/10/01/how-to-run-gui-programs-on-a-server-without-any-monitor/] installed._
+#### 10. Please step to [my website](https://www.sunmiao.name/post/phypartspiecharts/) for instructions of making a Phyparts Piecharts  
+
+
+_If you run this on your own, you need have Python3, ETE3, and [X server](https://kovyrin.net/2007/10/01/how-to-run-gui-programs-on-a-server-without-any-monitor/) installed._
 
 
 <center>
