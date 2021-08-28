@@ -1,5 +1,5 @@
 ---
-title: "Intructions for extracting sequences from HTS target enrichment reads"
+title: "Instructions for extracting sequences from HTS target enrichment reads"
 author: "Miao Sun ( _cactusresponsible[AT]gmail.com_)"
 date: "July 16, 2019"
 output:
